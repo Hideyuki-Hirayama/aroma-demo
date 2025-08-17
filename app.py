@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
-from data import SYMPTOMS, OILS, SCORE_TABLE, CATEGORIES, OIL_TO_CATEGORIES
+from data import SYMPTOMS, OILS, SCORE_TABLE
 from logic import pick_blend
 
 st.set_page_config(page_title="アロマ・ブレンド提案（デモ）", page_icon="🫧", layout="centered")
@@ -31,7 +31,7 @@ with st.form("input_form", clear_on_submit=False):
     with col2:
         sweets = st.selectbox("甘いものは好きですか？", ["いいえ", "はい"])
         dislike_perfume = st.selectbox("香水は嫌いですか？", ["いいえ", "はい"])
-        disliked_categories = st.multiselect("嫌いな香りの系統（任意）", CATEGORIES, default=[])
+        disliked_oils = st.multiselect("苦手な香り（任意）", OILS, default=[])
         allergy = st.text_input("アレルギーはありますか？（任意で記入）")
 
     symptom = st.selectbox(
@@ -44,7 +44,7 @@ with st.form("input_form", clear_on_submit=False):
 
 # --- 実行 ---
 if submitted:
-    res = pick_blend(symptom, disliked_categories, diff_threshold=2)
+    res = pick_blend(symptom, disliked_oils, diff_threshold=2)
 
     st.subheader("結果")
     # 入力サマリ
@@ -52,7 +52,7 @@ if submitted:
         st.write({
             "年齢": age, "性別": sex, "たばこ": smoke, "お酒": alcohol, "コーヒー": coffee,
             "甘いもの": sweets, "香水が嫌い": dislike_perfume,
-            "嫌いな香り系統": disliked_categories, "アレルギー": allergy,
+            "苦手な精油": disliked_oils, "アレルギー": allergy,
             "症状": symptom
         })
 
