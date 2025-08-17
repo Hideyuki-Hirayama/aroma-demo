@@ -32,4 +32,61 @@ with st.form("input_form", clear_on_submit=False):
         sweets = st.selectbox("甘いものは好きですか？", ["いいえ", "はい"])
         dislike_perfume = st.selectbox("香水は嫌いですか？", ["いいえ", "はい"])
         # ここを「苦手な精油」に変更
-        disliked_oils = st.mult_
+        disliked_oils = st.multiselect("苦手な香り（任意）", OILS, default=[])
+        allergy = st.text_input("アレルギーはありますか？（任意で記入）")
+
+    symptom = st.selectbox(
+        "今一番困っている症状",
+        SYMPTOMS,
+        index=SYMPTOMS.index("肩こり") if "肩こり" in SYMPTOMS else 0
+    )
+
+    submitted = st.form_submit_button("ブレンドを提案する 🔮")
+
+# --- 実行 ---
+if submitted:
+    res = pick_blend(symptom, disliked_oils, diff_threshold=2)
+
+    st.subheader("結果")
+    # 入力サマリ
+    with st.expander("入力内容のサマリ", expanded=False):
+        st.write({
+            "年齢": age, "性別": sex, "たばこ": smoke, "お酒": alcohol, "コーヒー": coffee,
+            "甘いもの": sweets, "香水が嫌い": dislike_perfume,
+            "苦手な精油": disliked_oils,
+            "アレルギー": allergy,
+            "症状": symptom
+        })
+
+    # ランキング表（系統列は削除）
+    df_rank = pd.DataFrame([
+        {"精油": oil, "スコア": score}
+        for (oil, score) in res.get("ranking", [])
+    ])
+    if not df_rank.empty:
+        st.markdown("**候補ランキング**")
+        st.dataframe(df_rank, use_container_width=True)
+
+    # ブレンド結果
+    if "error" in res:
+        st.error(res["error"])
+    else:
+        st.success("ブレンドが決定しました。")
+        blend_df = pd.DataFrame([{"精油": oil, "滴数": drops} for oil, drops in res["blend"]])
+        st.table(blend_df)
+        st.caption(res["rule"])
+        if "note" in res:
+            st.info(res["note"])
+
+    # 安全に関する注意（最低限）
+    st.divider()
+    st.caption("""
+**注意**: 本提案はデモです。既往・服薬・妊娠授乳・小児/高齢者・皮膚疾患等がある場合は、使用可否や希釈率を専門家に確認してください。目・粘膜を避け、パッチテスト推奨。異常時は中止してください。医療判断を置き換えるものではありません。
+""")
+
+# 参考：スコア表を確認できるように（列は精油のみ）
+with st.expander("スコア表（症状×精油）を表示", expanded=False):
+    st.dataframe(
+        pd.DataFrame(SCORE_TABLE).T[["ラベンダー","オレンジ","ゼラニウム","フランキンセンス"]],
+        use_container_width=True
+    )
