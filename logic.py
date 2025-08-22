@@ -25,8 +25,8 @@ def pick_blend(
     # ルール説明（実効滴数も明記）
     # 3:1 → 12滴なら 9滴/3滴、2:2 → 12滴なら 6滴/6滴
     rule_text = (
-        f"差>={diff_threshold} なら 3:1 比率（例: 合計{total_drops}滴なら 9滴/3滴）、"
-        f"差<{diff_threshold} なら 2:2 比率（例: 合計{total_drops}滴なら 6滴/6滴）"
+        f"差>={diff_threshold} なら 3:1 比率、"
+        f"差<{diff_threshold} なら 2:2 比率"
     )
 
     result = {
