@@ -6,7 +6,7 @@ def pick_blend(
     symptom: str,
     disliked_oils: List[str],
     diff_threshold: int = 2,
-    total_drops: int = 12,   # ← 合計滴数をここで指定（デフォルト12）
+    total_drops: int = 4,   # ← 合計滴数をここで指定（デフォルト12）
 ):
     """
     単一の症状に対して、苦手な精油を除外後、上位2種と滴数を返す。
