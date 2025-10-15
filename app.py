@@ -43,8 +43,7 @@ with st.form("input_form", clear_on_submit=False):
 
 # --- 実行 ---
 if submitted:
-    # ここを 12 滴に
-    res = pick_blend(symptom, disliked_oils, diff_threshold=2, total_drops=4)
+    res = pick_blend(symptom, disliked_oils)
 
     st.subheader("結果")
 
