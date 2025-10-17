@@ -20,8 +20,8 @@ with st.form("input_form", clear_on_submit=False):
         coffee = st.selectbox("コーヒーは好きですか？", ["いいえ", "はい"])
     with col2:
         sweets = st.selectbox("甘いものは好きですか？", ["いいえ", "はい"])
+        perfume_like = st.selectbox("香水は好きですか？", ["いいえ", "はい"])
         disliked_oils = st.multiselect("苦手な香り（任意）", OILS, default=[])
-        allergy = st.text_input("アレルギーはありますか？（任意で記入）")
 
     symptom = st.selectbox(
         "今一番困っている症状",
@@ -35,13 +35,8 @@ with st.form("input_form", clear_on_submit=False):
 if submitted:
     res = pick_blend(symptom, disliked_oils)
 
-    # 結果は「滴数のみ」表示
     if "error" in res:
         st.error(res["error"])
     else:
         blend_df = pd.DataFrame([{"精油": oil, "滴数": drops} for oil, drops in res["blend"]])
         st.table(blend_df)
-
-    # 注意書き（最低限）
-    st.divider()
-
