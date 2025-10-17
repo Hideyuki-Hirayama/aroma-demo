@@ -9,13 +9,6 @@ st.set_page_config(page_title="アロマ・ブレンド提案（デモ）", page
 st.title("🫧 アロマブレンド提案（デモ版）")
 st.caption("症状に対しておすすめの精油ブレンドと滴数を提案します。")
 
-with st.expander("このデモのルール", expanded=False):
-    st.markdown("""
-- 症状（単一選択）からおすすめの精油を提案します。**苦手な精油**は提案から除外します。
-- スコア表（症状×精油）から上位2種を抽出。
-- 年齢/性別/嗜好/アレルギー等は今回のデモでは使用しない（患者用では使用）。
-    """)
-
 # --- フォーム（入力） ---
 st.subheader("質問票")
 with st.form("input_form", clear_on_submit=False):
